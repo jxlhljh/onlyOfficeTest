@@ -1,0 +1,55 @@
+<configuration>
+	<property name="log_dir" value="./logs" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder>
+            <pattern>%d %5p %X{user} %X{logId}[%t] %c.%M:%L - %m%n</pattern>
+        </encoder>
+    </appender>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	  	<file>${log_dir}/log.log</file>
+	  	<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+	    <!-- rollover daily -->
+	    <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+			<!-- each file should be at most 10MB, keep 7 days worth of history, but at most 1GB -->
+			<maxFileSize>10MB</maxFileSize>
+			<maxHistory>7</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
+	  	</rollingPolicy>
+		<encoder>
+		    <pattern>%d %5p %X{user} %X{requestId}[%t] %c.%M:%L - %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	  	<file>${log_dir}/error.log</file>
+	  	<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+	    <!-- rollover daily -->
+	    <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}.%i.error.log.zip</fileNamePattern>
+			<!-- each file should be at most 10MB, keep 7 days worth of history, but at most 1GB -->
+			<maxFileSize>10MB</maxFileSize>
+			<maxHistory>7</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
+	  	</rollingPolicy>
+		<encoder>
+		    <pattern>%d %5p %X{user} %X{requestId}[%t] %c.%M:%L - %m%n</pattern>
+		</encoder>
+	</appender>
+
+    <!-- 不同的业务逻辑日志打印到指定文件夹-->
+  	<logger name="ERROR" additivity="false" level="INFO">
+  		<appender-ref ref="STDOUT" />
+    	<appender-ref ref="ERROR"/>
+  	</logger>
+
+  	<logger name="cn.gzsendi" level="DEBUG" />
+	<logger name="com.alibaba.druid.filter.stat.StatFilter" level="ERROR">
+        <appender-ref ref="ERROR" />
+    </logger>
+
+    <root level="INFO">
+	    <appender-ref ref="STDOUT" />
+	    <appender-ref ref ="FILE"/>
+    </root>
+
+</configuration>

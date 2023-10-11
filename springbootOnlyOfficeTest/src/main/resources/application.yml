@@ -1,0 +1,16 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /
+
+spring:
+  mvc:
+    #没有绑定的url直接抛出错误
+    throw-exception-if-no-handler-found: true
+    #swagger3 需配置，不然展示不了列表
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  web:
+    resources:
+      #不为静态文件建立映射路径
+      add-mappings: false
